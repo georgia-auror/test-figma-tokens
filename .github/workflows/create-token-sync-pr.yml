@@ -5,7 +5,49 @@ on:
     branches:
       - "figma-token-sync"
 
+env:
+  BRANCH_NAME: figma-token-sync
+
 jobs:
+  run-style-dictionary:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 10
+    outputs:
+      GITHUB_SHA: ${{ steps.commit.outputs.GITHUB_SHA }}
+      GITHUB_REF: ${{ steps.commit.outputs.GITHUB_REF }}
+
+    steps:
+      - name: Configure git
+        run: |
+          git config --global core.autocrlf true
+          git config --global user.name "techauror[bot]"
+          git config --global user.email "113948341+techauror@users.noreply.github.com"
+
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout branch
+        run: |
+          git checkout -B "$BRANCH_NAME"
+
+      - name: Install Style Dictionary
+        run: |
+          npm install -g style-dictionary
+
+      - name: Run Style Dictionary
+        run: |
+          npm run sd-build
+          git add --all
+
+      - name: Commit the changes
+        id: commit
+        run: |
+          git commit -m "Update design tokens with Style Dictionary"
+          echo "GITHUB_SHA=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "GITHUB_REF=$(git rev-parse --symbolic-full-name HEAD)" >> "$GITHUB_OUTPUT"
+          git push -u -f origin "$BRANCH_NAME"
+
   create-pr:
     runs-on: ubuntu-latest
     timeout-minutes: 10
