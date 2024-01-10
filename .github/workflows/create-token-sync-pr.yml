@@ -1,0 +1,52 @@
+name: Create PR for Figma Token sync
+
+on: [push]
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PR_BRANCH_NAME: figma-token-sync
+
+    steps:
+      - name: Create PR for Figma Token sync
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { PR_BRANCH_NAME } = process.env;
+            const title = `Update Figma Tokens`;
+            const body = `Update Figma Tokens`;
+
+            const head = `${context.repo.owner}:${process.env.PR_BRANCH_NAME}`;
+
+            const {
+              data: [pr],
+            } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              head,
+            });
+
+            if (!pr) {
+              const { data } = await github.rest.pulls.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                head,
+                base: 'main',
+                body,
+                title,
+              });
+              console.log('Created PR', data.html_url);
+            } else {
+              const { data } = await github.rest.pulls.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pr.number,
+                body,
+                title,
+              });
+              console.log('Updated PR', data.html_url);
+            }
