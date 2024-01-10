@@ -51,7 +51,7 @@ module.exports = {
             [category]: {
               ...obj[category],
               ...(hasItem 
-                ? { [type]: { ...obj[category][type], [attributes.item]: value }} 
+                ? { [type]: { ...obj[category]?.[type], [attributes.item]: value }} 
                 : { [type]: value }
               ),
             }
