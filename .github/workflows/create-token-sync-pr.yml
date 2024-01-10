@@ -1,6 +1,9 @@
 name: Create PR for Figma Token sync
 
-on: [push]
+on:
+  push:
+    branches:
+      - "figma-token-sync"
 
 jobs:
   create-pr:
