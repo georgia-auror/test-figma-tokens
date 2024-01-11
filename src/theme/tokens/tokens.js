@@ -1,10 +1,17 @@
 export const tokens = {
   Primitives: {
-    Color: {
-      Blue: "#1849a9",
-      Yellow: "#f7b204",
-      Green: "#19613d",
+    color: {
+      blue: "#1849a9",
+      yellow: "#f7b204",
+      green: "#19613d",
       white: "#ffffff"
+    },
+    fontSize: {
+      sm: "12px",
+      md: "14px",
+      base: "16px",
+      lg: "20px",
+      xl: "24px"
     }
   }
 }
