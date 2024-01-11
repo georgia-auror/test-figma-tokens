@@ -1,5 +1,5 @@
 export const colors = {
-  Blue: {
+  blue: {
     50: "#eff8ff",
     100: "#d1e9ff",
     200: "#9ccafc",
@@ -8,7 +8,7 @@ export const colors = {
     500: "#175cd3",
     600: "#1849a9"
   },
-  Yellow: {
+  yellow: {
     50: "#fef4cd",
     100: "#fef4cd",
     200: "#fee78c",
@@ -17,7 +17,7 @@ export const colors = {
     500: "#f8c015",
     600: "#f7b204"
   },
-  Green: {
+  green: {
     50: "#ecfdf3",
     100: "#d1fadf",
     200: "#81e4af",
