@@ -19,6 +19,7 @@ export const PRIMITIVES_COLOR_GREEN_300 = "#12b76a";
 export const PRIMITIVES_COLOR_GREEN_400 = "#039855";
 export const PRIMITIVES_COLOR_GREEN_500 = "#027a48";
 export const PRIMITIVES_COLOR_GREEN_600 = "#19613d";
+export const PRIMITIVES_COLOR_RED_50 = "#fef3f2";
 export const PRIMITIVES_COLOR_WHITE = "#ffffff";
 export const PRIMITIVES_FONT_SIZE_SM = "12px";
 export const PRIMITIVES_FONT_SIZE_MD = "14px";
