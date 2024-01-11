@@ -14,4 +14,4 @@ export const tokens = {
       xl: "24px"
     }
   }
-}
+};
