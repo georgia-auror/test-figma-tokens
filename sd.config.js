@@ -1,7 +1,7 @@
 module.exports = {
   filter: {
-    mainTokens: function(token) {
-        return token.attributes.category !== 'colors' && token.attributes.category !== 'fontSizes'
+    primitives: function(token) {
+        return token.attributes.type !== 'color';
     }
   },
   format: {
@@ -34,59 +34,80 @@ module.exports = {
       let outputString = '';
       dictionary.allTokens.map(token => {
         const { attributes, value } = token;
+        // If using a single file source, category should indicate separate files of outputs. E.g. primitive vs semantic token sets
         const category = attributes.category;
         const type = attributes.type?.replace("-", "");
-        const hasItem = !!attributes.item;
+        const item = attributes.item;
+        const subItem = attributes.subitem;
 
+        // Do something tidier here
         if (options.ignoreRoot) {
           obj = {
             ...obj,
-            ...(hasItem 
-              ? { [type]: { ...obj[type], [attributes.item]: value }} 
-              : { [type]: value }
+            ...(!!item && !!subItem
+              ? { 
+                [item]: { 
+                  ...obj[item], 
+                  [subItem]: value 
+                }
+              }
+              : { 
+                [item]: value 
+              }
             )
           };
         } else {
-          obj = { ...obj, 
-            [category]: {
-              ...obj[category],
-              ...(hasItem 
-                ? { [type]: { ...obj[category]?.[type], [attributes.item]: value }} 
-                : { [type]: value }
-              ),
-            }
+          obj = {
+            ...obj,
+            ...(!!item && !!subItem
+              ? { 
+                [type]: { 
+                  ...obj[type], 
+                  [item]: { 
+                    ...obj[type]?.[item], 
+                    [subItem]: value 
+                  } 
+                }
+              }
+              : !!item 
+              ? {
+                [type]: { 
+                  ...obj[type], 
+                  [item]: value 
+                }
+              } 
+              : { 
+                [type]: value 
+              }
+            )
           };
         }
+        // Not using category in single file input source
+        // } else {
+        //   obj = { ...obj, 
+        //     [category]: {
+        //       ...obj[category],
+        //       ...(!!item 
+        //         ? { [type]: { ...obj[category]?.[type], [attributes.item]: value }} 
+        //         : { [type]: value }
+        //       ),
+        //     }
+        //   };
+        // }
 
         const output = JSON.stringify(obj, null, 2);
         outputString = output.replace(/"([^"]+)":/g, '$1:');
 
-        // if (options.outputReferences) {
-        //   if (dictionary.usesReference(token.original.value)) {
-        //     const refs = dictionary.getReferences(token.original.value);
-        //     if (refs.length === 1) {
-        //       value = refs[0].name;
-        //     } else {
-        //       refs.forEach(ref => {
-        //         value = value.replace(ref.value, function() {
-        //           return `\$\{${ref.name}\}`;
-        //         });
-        //       });
-        //       // Use backticks for string interpolation
-        //       value = value.replaceAll('"', '`');
-        //     }
-        //   }
-        // }
-      
+        // TODO add support for references
       });
-      // Consider adding typings here as well
+      // TODO Consider adding typings here as well
       return `export const ${options.tokenSetName} = ${outputString}`;
     }
   },
   source: ["src/theme/rawTokens/**/*.json"],
   platforms: {
     scss: {
-      transformGroup: "scss",
+      transformGroup: 'scss',
       buildPath: "src/theme/",
       files: [{
         destination: "variables.scss",
@@ -108,13 +129,13 @@ module.exports = {
       }]
     },
     tailwind: {
-      transformGroup: "js",
+      transforms: ['attribute/cti', 'name/ti/constant', 'size/px', 'color/hex',],
       buildPath: "src/theme/tokens/",
       files: [
         {
           destination: "tokens.js",
           format: "formatForTailwind",
-          filter: "mainTokens",
+          filter: "primitives",
           options: {
             tokenSetName: 'tokens'
           }
@@ -123,9 +144,7 @@ module.exports = {
           destination: "colors.js",
           format: "formatForTailwind",
           filter: {
-            attributes: {
-              category: 'colors'
-            }
+            type: 'color'
           },
           options: {
             ignoreRoot: true,
