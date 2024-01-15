@@ -23,20 +23,8 @@ module.exports = {
             {
                 test: /\.css$/i,
                 include: path.resolve(__dirname, 'src'),
-                use: ['style-loader', 
-                {
-                    loader: require.resolve('css-loader'),
-                    options: {
-                        importLoaders: 1,
-                        modules: {
-                            auto: (/** @type string */ resourcePath) => {
-                                return !resourcePath.endsWith('.nomodule.css');
-                            },
-                            exportLocalsConvention: 'camelCase',
-                            localIdentName: '[name]__[local]___[hash:base64:5]',
-                        },
-                    },
-                }, {
+                use: ['style-loader', 'css-loader',
+                 {
                     loader: 'postcss-loader',
                     options: {
                         postcssOptions: {
