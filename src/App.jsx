@@ -1,11 +1,11 @@
 import React from 'react'
-import './theme/tailwind.nomodule.css'
+import './theme/tailwind.css'
 
 const App = () => {
   return (
-    <div className='hello-world'>
-      <h1 className='text-sm text-red-500'>Hello World</h1>
-      <p>Welcome to my world</p>
+    <div className='text-lg'>
+      <h1 className='text-sm text-blue-500'>Hello World</h1>
+      <p>Heres some more text</p>
     </div>
   )
 }

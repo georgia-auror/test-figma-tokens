@@ -3,7 +3,8 @@ module.exports = {
     primitives: function(token) {
         return token.attributes.type !== 'color';
     }
-  },
+  }, 
+  // Some hacky functions for formatting output files
   format: {
     formatJsWithReferences: function({dictionary, options}) {
       return dictionary.allTokens.map(token => {
