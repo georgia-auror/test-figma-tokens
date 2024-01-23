@@ -27,7 +27,7 @@ export const colors = {
     600: "#19613d"
   },
   red: {
-    50: "#fef3f2"
-  },
-  white: "#ffffff"
+    50: "#fef3f2",
+    100: "#fee4e2"
+  }
 }
